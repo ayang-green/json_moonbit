@@ -1,6 +1,6 @@
-// import {
-//   "username/json_moonbit" @lib,
-// }
+ import {
+   "githubpro/moonbit_json/lexer"@lexer,
+ }
 
 options(
   "is-main": true,

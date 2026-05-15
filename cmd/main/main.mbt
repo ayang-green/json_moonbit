@@ -3,5 +3,11 @@
 /// Keep main focused; move logic into the library package.
 /// Run with `moon run cmd/main` from the project root.
 fn main {
-  println("Hello")
+  let input = "{\"name\":\"abc\"}"
+
+  let tokens = @lexer.tokenize(input)
+
+  for token in tokens {
+    println(@lexer.token_to_string(token))
+  }
 }
