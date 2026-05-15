@@ -1,0 +1,7 @@
+// import {
+//   "username/json_moonbit" @lib,
+// }
+
+options(
+  "is-main": true,
+)
