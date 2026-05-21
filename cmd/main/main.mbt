@@ -17,5 +17,5 @@ fn main {
   let tokens = @lexer.tokenize(input)
 
   let ast = @parser.parse(tokens)
-  println(json_to_string(ast))
+  println(@parser.json_to_string(ast))
 }

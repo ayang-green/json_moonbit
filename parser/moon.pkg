@@ -1,5 +1,5 @@
 import {
-   "githubpro/json_moonbit/type"@type,
+   "githubpro/json_moonbit/lexer"@lexer,
  }
 
 options(

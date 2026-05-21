@@ -1,3 +1,17 @@
+pub enum Token {
+  LBrace
+  RBrace
+  Colon
+  Comma
+
+  TString(String)
+  TNumber(Int)
+
+  True
+  False
+  Null
+}
+
 fn string_to_int(s : String) -> Int {
   let mut result = 0
 
@@ -14,10 +28,10 @@ fn string_to_int(s : String) -> Int {
   result
 }
 
-pub fn tokenize(input : String) -> Array[@type.Token] {
+pub fn tokenize(input : String) -> Array[Token] {
 
   //let tokens = []
-  let tokens : Array[@type.Token] = []
+  let mut tokens : Array[Token] = []
 
   let chars = input.to_array()
   let mut i = 0
@@ -43,7 +57,7 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
 
       if ch == '"' {
 
-        tokens.push(@type.Token::Str(current))
+        tokens = tokens + [TString(current)]
 
         current = ""
         in_string = false
@@ -67,20 +81,16 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
 
       } else {
 
-        tokens.push(
-          @type.Token::Num(
-            string_to_int(current_number)
-          )
-        )
+        tokens = tokens + [TNumber(string_to_int(current_number))]
 
         current_number = ""
         in_number = false
 
         match ch {
-          ',' => tokens.push(@type.Token::Comma)
-          '}' => tokens.push(@type.Token::RBrace)
-          ':' => tokens.push(@type.Token::Colon)
-          '{' => tokens.push(@type.Token::LBrace)
+          ',' => tokens = tokens + [Comma]
+          '}' => tokens = tokens + [RBrace]
+          ':' => tokens = tokens + [Colon]
+          '{' => tokens = tokens + [LBrace]
           _ => ()
         }
 
@@ -101,11 +111,11 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
 
         match current_word {
 
-          "true" => tokens.push(@type.Token::True)
+          "true" => tokens = tokens + [True]
 
-          "false" => tokens.push(@type.Token::False)
+          "false" => tokens = tokens + [False]
 
-          "null" => tokens.push(@type.Token::Null)
+          "null" => tokens = tokens + [Null]
 
           _ => ()
 
@@ -115,10 +125,10 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
         in_word = false
 
         match ch {
-          ',' => tokens.push(@type.Token::Comma)
-          '}' => tokens.push(@type.Token::RBrace)
-          ':' => tokens.push(@type.Token::Colon)
-          '{' => tokens.push(@type.Token::LBrace)
+          ',' => {tokens = tokens + [Comma]}
+          '}' => {tokens = tokens + [RBrace]}
+          ':' => {tokens = tokens + [Colon]}
+          '{' => {tokens = tokens + [LBrace]}
           _ => ()
         }
 
@@ -140,10 +150,10 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
         '\r' => ()
 
         // symbols
-        '{' => tokens.push(@type.Token::LBrace)
-        '}' => tokens.push(@type.Token::RBrace)
-        ':' => tokens.push(@type.Token::Colon)
-        ',' => tokens.push(@type.Token::Comma)
+        '{' => {tokens = tokens + [LBrace]}
+        '}' => {tokens = tokens + [RBrace]}
+        ':' => {tokens = tokens + [Colon]}
+        ',' => {tokens = tokens + [Comma]}
 
         // string
         '"' => {
@@ -174,11 +184,7 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
   // flush number
   // =========================
   if in_number {
-    tokens.push(
-      @type.Token::Num(
-        string_to_int(current_number)
-      )
-    )
+    tokens = tokens + [TNumber(string_to_int(current_number))]
   }
 
   // =========================
@@ -188,9 +194,9 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
 
     match current_word {
 
-      "true" => tokens.push(@type.Token::True)
-      "false" => tokens.push(@type.Token::False)
-      "null" => tokens.push(@type.Null)
+      "true" => {tokens = tokens + [True]}
+      "false" => {tokens = tokens + [False]}
+      "null" => {tokens = tokens + [Null]}
       _ => ()
 
     }
@@ -200,22 +206,22 @@ pub fn tokenize(input : String) -> Array[@type.Token] {
   tokens
 }
 
-pub fn token_to_string(token : @type.Token) -> String {
+pub fn token_to_string(token : Token) -> String {
 
   match token {
 
-    @type.LBrace => "LBrace"
-    @type.RBrace => "RBrace"
-    @type.Colon => "Colon"
-    @type.Comma => "Comma"
+    LBrace => "LBrace"
+    RBrace => "RBrace"
+    Colon => "Colon"
+    Comma => "Comma"
 
-    @type.Str(s) => "String(" + s + ")"
+    TString(s) => "String(" + s + ")"
 
-    @type.Num(n) =>
+    TNumber(n) =>
       "Number(" + n.to_string() + ")"
 
-    @type.True => "True"
-    @type.False => "False"
-    @type.Null => "Null"
+    True => "True"
+    False => "False"
+    Null => "Null"
   }
 }

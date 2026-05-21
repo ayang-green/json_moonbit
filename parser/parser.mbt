@@ -1,6 +1,12 @@
+pub enum Json { 
+  JObject(Array[(String, Json)]) 
+  JString(String) 
+  JNumber(Int) 
+  JBool(Bool) 
+  JNull 
+}
 
-
-pub fn parse(tokens : Array[Token]) -> Json {
+pub fn parse(tokens : Array[@lexer.Token]) -> Json {
   if tokens.length() == 5 {
     match (
       tokens[0],
@@ -11,9 +17,9 @@ pub fn parse(tokens : Array[Token]) -> Json {
     ) {
       (
         LBrace,
-        String(key),
+        TString(key),
         Colon,
-        String(value),
+        TString(value),
         RBrace
       ) => {
         JObject([
@@ -41,7 +47,7 @@ pub fn json_to_string(json : Json) -> String {
     JBool(b) =>
       "JBool(" + b.to_string() + ")"
 
-    JObject(obj) =>
+    JObject(_obj) =>
       "JObject(...)"
   }
 }
