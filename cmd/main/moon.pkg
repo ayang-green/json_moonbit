@@ -1,5 +1,7 @@
  import {
-   "githubpro/moonbit_json/lexer"@lexer,
+   "githubpro/json_moonbit/lexer"@lexer,
+   "githubpro/json_moonbit/parser"@parser,
+   "githubpro/json_moonbit/type"@type,
  }
 
 options(

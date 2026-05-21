@@ -1,30 +1,26 @@
-pub enum Token {
-  LBrace
-  RBrace
-
-  Colon
-  Comma
-
-  String(String)
-  Number(Int)
-
-  True
-  False
-  Null
-}
-
 fn string_to_int(s : String) -> Int {
   let mut result = 0
 
-  for ch in s {
+  let chars = s.to_array()
+  let mut i = 0
+
+  while i < chars.length() {
+    let ch = chars[i]
+    i = i + 1
+
     result = result * 10 + (ch.to_int() - '0'.to_int())
   }
 
   result
 }
 
-pub fn tokenize(input : String) -> Array[Token] {
-  let tokens = []
+pub fn tokenize(input : String) -> Array[@type.Token] {
+
+  //let tokens = []
+  let tokens : Array[@type.Token] = []
+
+  let chars = input.to_array()
+  let mut i = 0
 
   let mut current = ""
   let mut in_string = false
@@ -35,20 +31,27 @@ pub fn tokenize(input : String) -> Array[Token] {
   let mut current_word = ""
   let mut in_word = false
 
-  for ch in input {
+  while i < chars.length() {
+
+    let ch = chars[i]
+    i = i + 1
 
     // =========================
     // STRING MODE
     // =========================
-
     if in_string {
 
       if ch == '"' {
-        tokens.push(String(current))
+
+        tokens.push(@type.Token::Str(current))
+
         current = ""
         in_string = false
+
       } else {
+
         current = current + ch.to_string()
+
       }
 
     }
@@ -56,24 +59,31 @@ pub fn tokenize(input : String) -> Array[Token] {
     // =========================
     // NUMBER MODE
     // =========================
-
     else if in_number {
 
       if ch >= '0' && ch <= '9' {
+
         current_number = current_number + ch.to_string()
+
       } else {
 
-        tokens.push(Number(string_to_int(current_number)))
+        tokens.push(
+          @type.Token::Num(
+            string_to_int(current_number)
+          )
+        )
 
         current_number = ""
         in_number = false
 
-        // 这里继续处理当前字符
         match ch {
-          ',' => tokens.push(Comma)
-          '}' => tokens.push(RBrace)
+          ',' => tokens.push(@type.Token::Comma)
+          '}' => tokens.push(@type.Token::RBrace)
+          ':' => tokens.push(@type.Token::Colon)
+          '{' => tokens.push(@type.Token::LBrace)
           _ => ()
         }
+
       }
 
     }
@@ -81,29 +91,37 @@ pub fn tokenize(input : String) -> Array[Token] {
     // =========================
     // WORD MODE
     // =========================
-
     else if in_word {
 
       if ch >= 'a' && ch <= 'z' {
+
         current_word = current_word + ch.to_string()
+
       } else {
 
         match current_word {
-          "true" => tokens.push(True)
-          "false" => tokens.push(False)
-          "null" => tokens.push(Null)
+
+          "true" => tokens.push(@type.Token::True)
+
+          "false" => tokens.push(@type.Token::False)
+
+          "null" => tokens.push(@type.Token::Null)
+
           _ => ()
+
         }
 
         current_word = ""
         in_word = false
 
-        // 继续处理当前字符
         match ch {
-          ',' => tokens.push(Comma)
-          '}' => tokens.push(RBrace)
+          ',' => tokens.push(@type.Token::Comma)
+          '}' => tokens.push(@type.Token::RBrace)
+          ':' => tokens.push(@type.Token::Colon)
+          '{' => tokens.push(@type.Token::LBrace)
           _ => ()
         }
+
       }
 
     }
@@ -111,7 +129,6 @@ pub fn tokenize(input : String) -> Array[Token] {
     // =========================
     // NORMAL MODE
     // =========================
-
     else {
 
       match ch {
@@ -123,48 +140,59 @@ pub fn tokenize(input : String) -> Array[Token] {
         '\r' => ()
 
         // symbols
-        '{' => tokens.push(LBrace)
-        '}' => tokens.push(RBrace)
-        ':' => tokens.push(Colon)
-        ',' => tokens.push(Comma)
+        '{' => tokens.push(@type.Token::LBrace)
+        '}' => tokens.push(@type.Token::RBrace)
+        ':' => tokens.push(@type.Token::Colon)
+        ',' => tokens.push(@type.Token::Comma)
 
-        // string start
+        // string
         '"' => {
           in_string = true
         }
 
-        // number start
+        // number
         '0'..='9' => {
           in_number = true
           current_number = ch.to_string()
         }
 
-        // word start
+        // word
         'a'..='z' => {
           in_word = true
           current_word = ch.to_string()
         }
 
         _ => ()
+
       }
 
     }
 
   }
 
-  // 防止数字在结尾
+  // =========================
+  // flush number
+  // =========================
   if in_number {
-    tokens.push(Number(string_to_int(current_number)))
+    tokens.push(
+      @type.Token::Num(
+        string_to_int(current_number)
+      )
+    )
   }
 
-  // 防止单词在结尾
+  // =========================
+  // flush word
+  // =========================
   if in_word {
 
     match current_word {
-      "true" => tokens.push(True)
-      "false" => tokens.push(False)
-      "null" => tokens.push(Null)
+
+      "true" => tokens.push(@type.Token::True)
+      "false" => tokens.push(@type.Token::False)
+      "null" => tokens.push(@type.Null)
       _ => ()
+
     }
 
   }
@@ -172,20 +200,22 @@ pub fn tokenize(input : String) -> Array[Token] {
   tokens
 }
 
-pub fn token_to_string(token : Token) -> String {
+pub fn token_to_string(token : @type.Token) -> String {
+
   match token {
-    LBrace => "LBrace"
-    RBrace => "RBrace"
 
-    Colon => "Colon"
-    Comma => "Comma"
+    @type.LBrace => "LBrace"
+    @type.RBrace => "RBrace"
+    @type.Colon => "Colon"
+    @type.Comma => "Comma"
 
-    String(s) => "String(" + s + ")"
+    @type.Str(s) => "String(" + s + ")"
 
-    Number(n) => "Number(" + n.to_string() + ")"
+    @type.Num(n) =>
+      "Number(" + n.to_string() + ")"
 
-    True => "True"
-    False => "False"
-    Null => "Null"
+    @type.True => "True"
+    @type.False => "False"
+    @type.Null => "Null"
   }
 }
