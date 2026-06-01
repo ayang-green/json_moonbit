@@ -6,9 +6,7 @@ pub enum Json {
   JNull 
 }
 
-fn parse_object(
-  tokens : Array[@lexer.Token]
-) -> Json {
+fn parse_object(tokens : Array[@lexer.Token]) -> Json {
 
   let mut fields = []
 
@@ -59,31 +57,29 @@ fn parse_object(
 }
 
 pub fn parse(tokens : Array[@lexer.Token]) -> Json {
-  if tokens.length() == 5 {
+
+  if tokens.length() < 2 {
+
+    JNull
+
+  } else {
+
     match (
       tokens[0],
-      tokens[1],
-      tokens[2],
-      tokens[3],
-      tokens[4]
+      tokens[tokens.length() - 1]
     ) {
+
       (
         LBrace,
-        TString(key),
-        Colon,
-        TString(value),
         RBrace
-      ) => {
-        JObject([
-          (key, JString(value))
-        ])
-      }
+      ) => parse_object(tokens)
 
       _ => JNull
+
     }
-  } else {
-    JNull
+
   }
+
 }
 
 pub fn json_to_string(json : Json) -> String {
