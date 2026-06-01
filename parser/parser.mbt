@@ -6,6 +6,58 @@ pub enum Json {
   JNull 
 }
 
+fn parse_object(
+  tokens : Array[@lexer.Token]
+) -> Json {
+
+  let mut fields = []
+
+  let mut i = 1
+
+  while i < tokens.length() - 1 {
+
+    match (
+      tokens[i],
+      tokens[i + 1],
+      tokens[i + 2]
+    ) {
+
+      (
+        TString(key),
+        Colon,
+        TString(value)
+      ) => {
+
+        fields = fields + [
+          (key, JString(value))
+        ]
+
+      }
+
+      (
+        TString(key),
+        Colon,
+        TNumber(value)
+      ) => {
+
+        fields = fields + [
+          (key, JNumber(value))
+        ]
+
+      }
+
+      _ => ()
+
+    }
+
+    i = i + 4
+
+  }
+
+  JObject(fields)
+
+}
+
 pub fn parse(tokens : Array[@lexer.Token]) -> Json {
   if tokens.length() == 5 {
     match (
