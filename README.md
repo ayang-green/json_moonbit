@@ -53,4 +53,5 @@ Input:
 }
 
 Output:
+```json
 {name: JString(abc), age: JNumber(18)}
