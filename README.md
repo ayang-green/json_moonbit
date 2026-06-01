@@ -46,12 +46,11 @@ Initial JSON object parsing is now supported.
 
 Input:
 
-```json
 {
   "name": "abc",
   "age": 18
 }
 
 Output:
-```json
+
 {name: JString(abc), age: JNumber(18)}
