@@ -95,7 +95,27 @@ pub fn json_to_string(json : Json) -> String {
     JBool(b) =>
       "JBool(" + b.to_string() + ")"
 
-    JObject(_obj) =>
-      "JObject(...)"
+    JObject(obj) => {
+
+      let mut result = "{"
+
+      let mut i = 0
+
+      while i < obj.length() {
+
+       let (key, value) = obj[i]
+
+        if i > 0 {
+          result = result + ", "
+        }
+
+        result =result + key  + ": " + json_to_string(value)
+
+        i = i + 1
+      }
+
+      result + "}"
+
+    }
   }
 }
