@@ -11,6 +11,8 @@ MoonBit project initialization and local compilation are completed.
 String tokenization is now supported.
 Integer number tokenization has been added.
 A functional JSON lexer is now implemented.
+Basic JSON AST support has been added.
+Initial JSON object parsing is now supported.
 
 ## Current Features
 ### Supported JSON Tokens
@@ -31,3 +33,24 @@ A functional JSON lexer is now implemented.
 - Integer number tokenization
 - JSON keyword tokenization
 - Simple lexer state machine
+
+- ### Parser Features
+
+- JSON AST definition
+- JSON object parsing
+- String value parsing
+- Integer value parsing
+- Multiple object field support
+
+## Example
+
+Input:
+
+```json
+{
+  "name": "abc",
+  "age": 18
+}
+
+Output:
+{name: JString(abc), age: JNumber(18)}
