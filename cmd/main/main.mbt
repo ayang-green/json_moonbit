@@ -12,7 +12,8 @@ fn main {
   //   println(@lexer.token_to_string(token))
   // }
 
-  let input = "{\"name\":\"abc\",\"age\":18}"
+  let input ="{\"name\":\"abc\",\"active\":true,\"deleted\":false,\"data\":null}"
+
 
   let tokens = @lexer.tokenize(input)
 

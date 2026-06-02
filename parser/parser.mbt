@@ -21,32 +21,58 @@ fn parse_object(tokens : Array[@lexer.Token]) -> Json {
     ) {
 
       (
-        TString(key),
-        Colon,
-        TString(value)
+       TString(key),
+       Colon,
+       TString(value)
       ) => {
 
-        fields = fields + [
-          (key, JString(value))
-        ]
+        fields = fields + [ (key, JString(value))]
 
-      }
+        }
 
-      (
+     (
         TString(key),
         Colon,
         TNumber(value)
-      ) => {
+    ) => {
 
-        fields = fields + [
-          (key, JNumber(value))
-        ]
+        fields = fields + [(key, JNumber(value))]
 
-      }
+        }
 
-      _ => ()
+    (
+        TString(key),
+        Colon,
+        True
+    ) => {
 
-    }
+       fields = fields + [ (key, JBool(true))]
+
+        }
+
+   (
+        TString(key),
+       Colon,
+       False
+    ) => {
+
+        fields = fields + [(key, JBool(false))]
+
+        }
+
+    (
+        TString(key),
+         Colon,
+          Null
+    ) => {
+
+          fields = fields + [(key, JNull)]
+
+        }
+
+    _ => ()
+
+}
 
     i = i + 4
 
