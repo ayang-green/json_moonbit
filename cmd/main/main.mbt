@@ -12,11 +12,12 @@ fn main {
   //   println(@lexer.token_to_string(token))
   // }
 
-  let input ="{\"name\":\"abc\",\"active\":true,\"deleted\":false,\"data\":null}"
+  let input ="{\"user\":{\"name\":\"abc\",\"age\":18},\"ok\":true}"
 
 
   let tokens = @lexer.tokenize(input)
 
   let ast = @parser.parse(tokens)
+
   println(@parser.json_to_string(ast))
 }
