@@ -34,12 +34,14 @@ Initial JSON object parsing is now supported.
 - JSON keyword tokenization
 - Simple lexer state machine
 
-- ### Parser Features
+### Parser Features
 
 - JSON AST definition
 - JSON object parsing
 - String value parsing
 - Integer value parsing
+- Boolean value parsing
+- Null value parsing
 - Multiple object field support
 
 ## Example
