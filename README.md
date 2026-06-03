@@ -42,17 +42,21 @@ Initial JSON object parsing is now supported.
 - Integer value parsing
 - Boolean value parsing
 - Null value parsing
-- Multiple object field support
+- Recursive JSON object parsing
+- Nested object support
 
 ## Example
 
 Input:
 
 {
-  "name": "abc",
-  "age": 18
+  "user": {
+    "name": "abc",
+    "age": 18
+  }
+  "ok": true
 }
 
 Output:
 
-{name: JString(abc), age: JNumber(18)}
+{user: {name: JString(abc), age: JNumber(18)}, ok: JBool(true)}
