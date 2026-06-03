@@ -53,7 +53,7 @@ Input:
   "user": {
     "name": "abc",
     "age": 18
-  }
+  },
   "ok": true
 }
 
